@@ -16,15 +16,18 @@ class MoviesController < ApplicationController
       # FULL TEXT SEARCH
       # jump => SEQUENCE OF CHARACTERS
       # jump => jumps, jumped, jumping, ....
-      sql_query = <<~SQL
-        movies.title @@ :query
-        OR movies.synopsis @@ :query
-        OR directors.first_name @@ :query
-        OR directors.last_name @@ :query
-      SQL
+      # sql_query = <<~SQL
+      #   movies.title @@ :query
+      #   OR movies.synopsis @@ :query
+      #   OR directors.first_name @@ :query
+      #   OR directors.last_name @@ :query
+      # SQL
 
 
-      @movies = Movie.joins(:director).where(sql_query, query: "%#{params[:query]}%") # MULTIPLE COLUMNS
+      # @movies = Movie.joins(:director).where(sql_query, query: "%#{params[:query]}%") # MULTIPLE COLUMNS
+      # @movies = Movie.search_by_title_and_synopsis(params[:query])
+      @movies = Movie.global_search(params[:query])
+
 
     else
       @movies = Movie.all
